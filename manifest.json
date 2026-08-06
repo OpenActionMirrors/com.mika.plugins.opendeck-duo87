@@ -1,0 +1,15 @@
+{
+  "Name": "Womier DUO87",
+  "Description": "Device support plugin for Womier DUO87 screen module",
+  "Author": "Mika",
+  "Version": "0.2.0",
+  "PluginUUID": "com.mika.plugins.opendeck-duo87",
+  "CodePathLin": "opendeck-duo87-linux",
+  "Icon": "assets/icon",
+  "Category": "Hardware",
+  "OS": [
+    { "Platform": "linux" }
+  ],
+  "Actions": [],
+  "DeviceNamespace": "d7"
+}
