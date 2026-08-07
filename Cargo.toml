@@ -1,7 +1,9 @@
 [package]
 name = "opendeck-duo87"
-version = "0.11.0"
+version = "0.2.0"
 edition = "2024"
+authors = ["Mika"]
+license = "GPL-3.0-or-later"
 
 [dependencies]
 data-url = "0.3.1"
