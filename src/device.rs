@@ -19,7 +19,6 @@ use crate::{
 pub async fn device_task(candidate: CandidateDevice, token: CancellationToken) {
     log::info!("Running device task for {:?}", candidate);
 
-    // Wrap in a closure so we can use `?` operator
     let device = async || -> Result<Device, MirajazzError> {
         let device = connect(&candidate).await?;
 
@@ -120,6 +119,7 @@ pub async fn connect(candidate: &CandidateDevice) -> Result<Device, MirajazzErro
         ENCODER_COUNT,
     )
     .await
+    // DUO87 reports press and release separately, so tell mirajazz to trust that.
     .map(|device| device.with_supports_both_keypress_states(true));
 
     match result {
@@ -188,7 +188,8 @@ async fn device_events_task(candidate: &CandidateDevice) -> Result<(), MirajazzE
             Ok(updates) => updates,
             Err(e) => {
                 let last_bad = *crate::inputs::LAST_BAD_INPUT.read().unwrap();
-
+                
+                // Screen doesn't redraw after screensaver exit, so detect that and re-render images and release buttons.
                 if let Some(50) = last_bad {
                     log::info!(
                         "Detected screensaver exit, re-rendering images and releasing buttons for {}",

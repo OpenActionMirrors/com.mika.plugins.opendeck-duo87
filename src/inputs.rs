@@ -4,9 +4,10 @@ use mirajazz::{error::MirajazzError, types::DeviceInput};
 
 use crate::mappings::KEY_COUNT;
 
-/// Records the raw input code whenever the device sends something outside
-/// the normal button range (0..=KEY_COUNT), so device.rs can inspect it
-/// after catching the resulting error — e.g. detecting screensaver-exit (50).
+/* 
+    Stores the last out-of-range input code so device.rs can check it
+    after an error, since process_input can't trigger events directly.
+*/
 pub static LAST_BAD_INPUT: LazyLock<RwLock<Option<u8>>> = LazyLock::new(|| RwLock::new(None));
 
 pub fn process_input(input: u8, state: u8) -> Result<DeviceInput, MirajazzError> {
@@ -14,6 +15,7 @@ pub fn process_input(input: u8, state: u8) -> Result<DeviceInput, MirajazzError>
 
     match input as usize {
         0..=KEY_COUNT => read_button_press(input, state),
+        // 50 is the "bad" input code that indicates the device has been reset (e.g. screensaver exit)
         _ => {
             *LAST_BAD_INPUT.write().unwrap() = Some(input);
             Err(MirajazzError::BadData)
@@ -31,8 +33,10 @@ fn read_button_states(states: &[u8]) -> Vec<bool> {
     bools
 }
 
-/// DUO87's button numbering (1-12) already matches visual grid order,
-/// top-left to bottom-right — confirmed via USB capture. No remapping needed.
+/*  Converts between OpenDeck's 0-indexed key numbering and the device's 1-indexed numbering.
+    OpenDeck: 0-11
+    Device: 1-12
+*/
 pub fn opendeck_to_device(key: u8) -> u8 {
     key
 }

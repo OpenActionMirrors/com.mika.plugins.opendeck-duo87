@@ -23,8 +23,6 @@ fn get_device_id(dev: &HidDeviceInfo) -> Option<String> {
             dev.serial_number.clone()?,
         )),
         1 => {
-            // All the "v1" devices share the same serial. Hardcode it because Windows returns invalid serial for them
-            // Also suffix v1 devices with the
             Some(format!(
                 "{}-355499441494-{}",
                 DEVICE_NAMESPACE,

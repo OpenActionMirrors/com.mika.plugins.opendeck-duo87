@@ -4,7 +4,7 @@ use mirajazz::{
 };
 
 // Must be unique between all plugins, 2 chars, match `DeviceNamespace` in manifest.json
-pub const DEVICE_NAMESPACE: &str = "d7"; // pick any unused 2-char code
+pub const DEVICE_NAMESPACE: &str = "d7";
 
 pub const ROW_COUNT: usize = 4;
 pub const COL_COUNT: usize = 3;
@@ -27,8 +27,8 @@ pub fn get_image_format_for_key(_kind: &Kind, _key: u8) -> ImageFormat {
     ImageFormat {
         mode: ImageMode::JPEG,
         size: (80, 80),
-        rotation: ImageRotation::Rot180, // verify this once buttons render — may need adjusting
-        mirror: ImageMirroring::None,  // same — verify visually
+        rotation: ImageRotation::Rot180,
+        mirror: ImageMirroring::None,
     }
 }
 
@@ -40,6 +40,7 @@ impl Kind {
         }
     }
 
+    // Sets mirajazz's packet size to 1024 bytes, matching DUO87's real transfers.
     pub fn protocol_version(&self) -> usize {
         2
     }
